@@ -3,13 +3,17 @@
   */
 object Sort {
   def bubble[T](list: List[T])(implicit ord: Ordering[T]): List[T] = {
-    def go(list: List[T]): (List[T], Boolean) = list match {
-      case it1 :: it2 :: tail if ord.lt(it1, it2) ⇒ (it2 :: go((it1 :: tail))._1, true)
-      case it1 :: it2 :: tail if ord.gt(it1, it2) ⇒ (it1 :: go((it2 :: tail))._1, false)
+    type BeenSorted = Boolean
+    def go(list: List[T]): (List[T], BeenSorted) = list match {
+      case h1 :: h2 :: tail if ord.gteq(h1, h2) ⇒ go(h2 :: tail) match {
+        case (xs, r) ⇒ (h1 :: xs, r)
+      }
+      case h1 :: h2 :: tail if ord.lt(h1, h2) ⇒ (h2 :: go(h1 :: tail)._1, true)
       case head :: Nil ⇒ (head :: Nil, false)
+      case Nil ⇒ (Nil, false)
     }
     go(list) match {
-      case (ls, true) ⇒ go(ls)._1
+      case (ls, true) ⇒ bubble(ls)
       case (ls, false) ⇒ ls
     }
   }

@@ -1,7 +1,10 @@
+import scala.annotation.tailrec
+
 /**
   * Created by stremlenye on 21/01/16.
   */
 object Sort {
+  @tailrec
   def bubble[T](list: List[T])(implicit ord: Ordering[T]): List[T] = {
     type BeenSorted = Boolean
     def go(list: List[T]): (List[T], BeenSorted) = list match {
